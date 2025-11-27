@@ -10,14 +10,12 @@ class ReservaController extends Controller
 {
     public function index()
     {
-     
         $reservas = Reserva::with('espacio')->paginate(10);
         return view('reservas.index', compact('reservas'));
     }
 
     public function create()
     {
-        
         $espacios = Espacio::all();
         return view('reservas.create', compact('espacios'));
     }

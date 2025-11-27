@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reserva extends Model
 {
-    protected $fillable = ['espacio_id','solicitante','fecha','hora_inicio','hora_fin','motivo'];
+    protected $fillable = ['espacio_id', 'solicitante', 'fecha', 'hora_inicio', 'hora_fin', 'motivo'];
 
     public function espacio()
     {
         return $this->belongsTo(Espacio::class);
     }
 }
-

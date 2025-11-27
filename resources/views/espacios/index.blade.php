@@ -1,57 +1,79 @@
 @extends('layouts.app')
 
+@section('title', 'Listado de Espacios')
+
 @section('content')
-<div class="container mt-4">
-    <h1>Listado de Espacios</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success mt-2">
-            {{ session('success') }}
-        </div>
-    @endif
 
-    <a href="{{ route('espacios.create') }}" class="btn btn-primary mb-3">Crear Espacio</a>
+<div class="container mx-auto p-4">
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Capacidad</th>
-                <th>Ubicación</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+{{-- Tarjeta Principal --}}
+<div class="bg-white rounded-lg shadow-xl p-6">
+    
+    <div class="flex justify-between items-center mb-6 border-b pb-4">
+        <h2 class="text-3xl font-bold text-gray-800">Listado de Espacios</h2>
+        
+        <a href="{{ route('espacios.create') }}" 
+           class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+            + Crear Espacio
+        </a>
+    </div>
 
-        <tbody>
-            @foreach($espacios as $espacio)
-            <tr>
-                <td>{{ $espacio->id }}</td>
-                <td>{{ $espacio->nombre }}</td>
-                <td>{{ $espacio->tipo }}</td>
-                <td>{{ $espacio->capacidad }}</td>
-                <td>{{ $espacio->ubicacion }}</td>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capacidad</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ubicación</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($espacios as $espacio)
+                    <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $espacio->id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $espacio->nombre }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $espacio->tipo }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $espacio->capacidad }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $espacio->ubicacion }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-center space-x-2">
+                            <a href="{{ route('espacios.edit', $espacio) }}" 
+                               class="text-indigo-600 hover:text-indigo-900 px-3 py-1 border border-indigo-600 rounded-md text-xs font-semibold hover:bg-indigo-50 transition">
+                                Editar
+                            </a>
+    
+                            <form action="{{ route('espacios.destroy', $espacio) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="text-red-600 hover:text-red-900 px-3 py-1 border border-red-600 rounded-md text-xs font-semibold hover:bg-red-50 transition"
+                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este espacio? Esta acción es irreversible.')">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            No hay espacios registrados en el sistema.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="mt-6">
+        {{ $espacios->links() }}
+    </div>
 
-                <td>
-                    <a href="{{ route('espacios.edit', $espacio) }}" class="btn btn-warning btn-sm">Editar</a>
+</div>
 
-                    <form action="{{ route('espacios.destroy', $espacio) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
 
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Seguro que deseas eliminar este espacio?');">
-                            Eliminar
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
 
-    </table>
-
-    {{ $espacios->links() }}
 </div>
 @endsection

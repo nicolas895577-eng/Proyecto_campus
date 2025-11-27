@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Espacio;
 use Illuminate\Http\Request;
 
@@ -10,13 +9,16 @@ class EspacioController extends Controller
 {
     public function index()
     {
-        $espacios = Espacio::paginate(10);
+        
+        $espacios = Espacio::orderBy('nombre', 'asc')->paginate(10); 
         return view('espacios.index', compact('espacios'));
     }
 
     public function create()
     {
-        return view('espacios.create');
+      
+        $espacio = new Espacio(); 
+        return view('espacios.create', compact('espacio'));
     }
 
     public function store(Request $request)
@@ -28,7 +30,7 @@ class EspacioController extends Controller
             'ubicacion' => 'required|string|max:255',
         ]);
 
-        Espacio::create($request->only('nombre', 'tipo', 'capacidad', 'ubicacion'));
+        Espacio::create($request->all());
 
         return redirect()->route('espacios.index')
             ->with('success', 'Espacio creado correctamente.');
@@ -48,7 +50,7 @@ class EspacioController extends Controller
             'ubicacion' => 'required|string|max:255',
         ]);
 
-        $espacio->update($request->only('nombre', 'tipo', 'capacidad', 'ubicacion'));
+        $espacio->update($request->all());
 
         return redirect()->route('espacios.index')
             ->with('success', 'Espacio actualizado correctamente.');
